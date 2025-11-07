@@ -35,6 +35,10 @@
 #define RED   10
 #define YEL   11
 #define GREEN 12
+
+#define RED_TIME   5
+#define YEL_TIME   2
+#define GREEN_TIME 3
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -94,43 +98,82 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int led = RED;
-  int cnt_red = 5, cnt_yel = 2, cnt_green = 3 ;
-
+  int state_main = RED;
+  int state_sub  = GREEN;
+  int cnt_main = 1;
+  int cnt_sub  = 1;
   while (1)
   {
 	  HAL_GPIO_TogglePin(LED_TEST_GPIO_Port,LED_TEST_Pin);
-	  switch(led){
+	  switch(state_main){
 	  case RED:
-		  HAL_GPIO_WritePin(RED_LED_GPIO_Port, RED_LED_Pin, RESET);
-		  HAL_GPIO_WritePin(YEL_LED_GPIO_Port,YEL_LED_Pin, SET);
-		  HAL_GPIO_WritePin(GREEN_LED_GPIO_Port, GREEN_LED_Pin,SET);
-		  cnt_red--;
-		  if(cnt_red < 1) {
-			  cnt_red = 5;
-			  led = GREEN;
+		  HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin, RESET);
+		  HAL_GPIO_WritePin(LED2_GPIO_Port,LED2_Pin, SET);
+		  HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin, SET);
+		  cnt_main++;
+		  if(cnt_main > RED_TIME) {
+			  cnt_main = 1;
+			  state_main = GREEN;
 		  }
 		  break;
 
 	  case YEL:
-		  HAL_GPIO_WritePin(RED_LED_GPIO_Port, RED_LED_Pin, SET);
-		  HAL_GPIO_WritePin(YEL_LED_GPIO_Port,YEL_LED_Pin, RESET);
-		  HAL_GPIO_WritePin(GREEN_LED_GPIO_Port, GREEN_LED_Pin,SET);
-		  cnt_yel--;
-		  if(cnt_yel < 1) {
-			  cnt_yel = 2;
-			  led = RED;
+		  HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin, SET);
+		  HAL_GPIO_WritePin(LED2_GPIO_Port,LED2_Pin, RESET);
+		  HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin, SET);
+		  cnt_main++;
+		  if(cnt_main > YEL_TIME) {
+			  cnt_main = 1;
+			  state_main = RED;
 		  }
 		  break;
 
 	  case GREEN:
-		  HAL_GPIO_WritePin(RED_LED_GPIO_Port, RED_LED_Pin, SET);
-		  HAL_GPIO_WritePin(YEL_LED_GPIO_Port,YEL_LED_Pin, SET);
-		  HAL_GPIO_WritePin(GREEN_LED_GPIO_Port, GREEN_LED_Pin, RESET);
-		  cnt_green--;
-		  if(cnt_green < 1) {
-			  cnt_green = 5;
-			  led = YEL;
+		  HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin, SET);
+		  HAL_GPIO_WritePin(LED2_GPIO_Port,LED2_Pin, SET);
+		  HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin, RESET);
+		  cnt_main++;
+		  if(cnt_main > GREEN_TIME) {
+			  cnt_main = 1;
+			  state_main = YEL;
+		  }
+		  break;
+
+	  default:
+		  break;
+	  }
+
+	  switch(state_sub) {
+	  case RED:
+		  HAL_GPIO_WritePin(LED4_GPIO_Port,LED4_Pin, RESET);
+		  HAL_GPIO_WritePin(LED5_GPIO_Port,LED5_Pin, SET);
+		  HAL_GPIO_WritePin(LED6_GPIO_Port,LED6_Pin, SET);
+		  cnt_sub++;
+		  if(cnt_sub > RED_TIME) {
+			  cnt_sub = 1;
+			  state_sub = GREEN;
+		  }
+		  break;
+
+	  case YEL:
+		  HAL_GPIO_WritePin(LED4_GPIO_Port,LED4_Pin, SET);
+		  HAL_GPIO_WritePin(LED5_GPIO_Port,LED5_Pin, RESET);
+		  HAL_GPIO_WritePin(LED6_GPIO_Port,LED6_Pin, SET);
+		  cnt_sub++;
+		  if(cnt_sub > YEL_TIME) {
+			  cnt_sub = 1;
+			  state_sub = RED;
+		  }
+		  break;
+
+	  case GREEN:
+		  HAL_GPIO_WritePin(LED4_GPIO_Port,LED4_Pin, SET);
+		  HAL_GPIO_WritePin(LED5_GPIO_Port,LED5_Pin, SET);
+		  HAL_GPIO_WritePin(LED6_GPIO_Port,LED6_Pin, RESET);
+		  cnt_sub++;
+		  if(cnt_sub > GREEN_TIME) {
+			  cnt_sub = 1;
+			  state_sub = YEL;
 		  }
 		  break;
 
@@ -193,10 +236,13 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LED_TEST_Pin|RED_LED_Pin|YEL_LED_Pin|GREEN_LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LED_TEST_Pin|LED1_Pin|LED2_Pin|LED3_Pin
+                          |LED4_Pin|LED5_Pin|LED6_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : LED_TEST_Pin RED_LED_Pin YEL_LED_Pin GREEN_LED_Pin */
-  GPIO_InitStruct.Pin = LED_TEST_Pin|RED_LED_Pin|YEL_LED_Pin|GREEN_LED_Pin;
+  /*Configure GPIO pins : LED_TEST_Pin LED1_Pin LED2_Pin LED3_Pin
+                           LED4_Pin LED5_Pin LED6_Pin */
+  GPIO_InitStruct.Pin = LED_TEST_Pin|LED1_Pin|LED2_Pin|LED3_Pin
+                          |LED4_Pin|LED5_Pin|LED6_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
