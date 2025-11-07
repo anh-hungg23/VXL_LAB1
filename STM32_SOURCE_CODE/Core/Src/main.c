@@ -91,8 +91,30 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  uint8_t flag = 0;
+  int counter = 1;
   while (1)
   {
+	  HAL_GPIO_TogglePin(LED_TEST_GPIO_Port,LED_TEST_Pin);
+	  if(flag == 0) {
+		  HAL_GPIO_WritePin(RED_LED_GPIO_Port,RED_LED_Pin,RESET);
+		  HAL_GPIO_WritePin(YEL_LED_GPIO_Port,YEL_LED_Pin,SET);
+		  counter ++;
+		  if(counter > 2) {
+			  counter = 1;
+			  flag = 1;
+		  }
+	  } else {
+		  HAL_GPIO_WritePin(RED_LED_GPIO_Port,RED_LED_Pin,SET);
+		  HAL_GPIO_WritePin(YEL_LED_GPIO_Port,YEL_LED_Pin,RESET);
+		  counter ++;
+		  if(counter > 2) {
+			  counter = 1;
+			  flag = 0;
+		  }
+	  }
+
+	  HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -148,10 +170,10 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LED_TEST_Pin|RED_LED_Pin|YEL_LED_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : PA5 */
-  GPIO_InitStruct.Pin = GPIO_PIN_5;
+  /*Configure GPIO pins : LED_TEST_Pin RED_LED_Pin YEL_LED_Pin */
+  GPIO_InitStruct.Pin = LED_TEST_Pin|RED_LED_Pin|YEL_LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
