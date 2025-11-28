@@ -32,6 +32,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define ALL_LED_PINS (LED_1_Pin|LED_2_Pin|LED_3_Pin|LED_4_Pin| \
+                      LED_5_Pin|LED_6_Pin|LED_7_Pin|LED_8_Pin| \
+                      LED_9_Pin|LED_10_Pin|LED_11_Pin|LED_12_Pin)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -96,10 +99,13 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   int i = 0;
+
   while (1)
   {
-	  HAL_GPIO_WritePin(GPIOA, led[i++],GPIO_PIN_RESET);
-	  if(i>13) i = 0;
+	  HAL_GPIO_WritePin(GPIOA,ALL_LED_PINS,GPIO_PIN_SET);
+	  HAL_GPIO_WritePin(GPIOA, led[i],GPIO_PIN_RESET);
+	  i++;
+	  if(i >= 12) i = 0;
 	  HAL_Delay(1000);
     /* USER CODE END WHILE */
 
