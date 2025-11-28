@@ -148,7 +148,7 @@ int main(void)
       }
 
       // Cập nhật vị trí LED:
-      sec_led  = sec  % 12;   // mỗi 1 giây sáng LED kế tiếp
+      sec_led  = (sec/5)  % 12;   // mỗi 1 giây sáng LED kế tiếp
       min_led  = min  % 12;   // mỗi 1 phút sáng LED kế tiếp
       hour_led = hour % 12;   // mỗi 5 phút đổi vị trí 1 lần (tự nhiên do modulo 12)
     /* USER CODE END WHILE */
