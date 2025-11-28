@@ -62,6 +62,7 @@ static void MX_GPIO_Init(void);
 		 GPIO_PIN_8, GPIO_PIN_9, GPIO_PIN_10, GPIO_PIN_11,
 		 GPIO_PIN_12, GPIO_PIN_13, GPIO_PIN_14, GPIO_PIN_15
  };
+
 /* USER CODE END 0 */
 
 /**
@@ -93,61 +94,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  void displayClockTime(int num) {
-	  switch (num) {
-	  case 0:
-		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_All,GPIO_PIN_RESET);
-		  break;
-	  case 1:
-		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_All,GPIO_PIN_SET);
-		  HAL_GPIO_WritePin(LED_1_GPIO_Port,LED_1_Pin,GPIO_PIN_RESET);//turn on led 1 and off all
-		  break;
-	  case 2:
-		  HAL_GPIO_WritePin(LED_1_GPIO_Port,LED_1_Pin,GPIO_PIN_SET);
-		  HAL_GPIO_WritePin(LED_2_GPIO_Port,LED_2_Pin,GPIO_PIN_RESET); //turn on led 2
-		  break;
-	  case 3:
-		  HAL_GPIO_WritePin(LED_2_GPIO_Port,LED_2_Pin,GPIO_PIN_SET);
-		  HAL_GPIO_WritePin(LED_3_GPIO_Port,LED_3_Pin,GPIO_PIN_RESET); //turn on led 3
-		  break;
-	  case 4:
-		  HAL_GPIO_WritePin(LED_3_GPIO_Port,LED_3_Pin,GPIO_PIN_SET);
-		  HAL_GPIO_WritePin(LED_4_GPIO_Port,LED_4_Pin,GPIO_PIN_RESET); //turn on led 4
-		  break;
-	  case 5:
-		  HAL_GPIO_WritePin(LED_4_GPIO_Port,LED_4_Pin,GPIO_PIN_SET);
-		  HAL_GPIO_WritePin(LED_5_GPIO_Port,LED_5_Pin,GPIO_PIN_RESET); //turn on led 5
-		  break;
-	  case 6:
-		  HAL_GPIO_WritePin(LED_5_GPIO_Port,LED_5_Pin,GPIO_PIN_SET);
-		  HAL_GPIO_WritePin(LED_6_GPIO_Port,LED_6_Pin,GPIO_PIN_RESET); //turn on led 6
-		  break;
-	  case 7:
-		  HAL_GPIO_WritePin(LED_6_GPIO_Port,LED_6_Pin,GPIO_PIN_SET);
-		  HAL_GPIO_WritePin(LED_7_GPIO_Port,LED_7_Pin,GPIO_PIN_RESET); //turn on led 7
-		  break;
-	  case 8:
-		  HAL_GPIO_WritePin(LED_7_GPIO_Port,LED_7_Pin,GPIO_PIN_SET);
-		  HAL_GPIO_WritePin(LED_8_GPIO_Port,LED_8_Pin,GPIO_PIN_RESET); //turn on led 8
-		  break;
-	  case 9:
-		  HAL_GPIO_WritePin(LED_8_GPIO_Port,LED_8_Pin,GPIO_PIN_SET);
-		  HAL_GPIO_WritePin(LED_9_GPIO_Port,LED_9_Pin,GPIO_PIN_RESET); //turn on led 9
-		  break;
-	  case 10:
-		  HAL_GPIO_WritePin(LED_9_GPIO_Port,LED_9_Pin,GPIO_PIN_SET);
-		  HAL_GPIO_WritePin(LED_10_GPIO_Port,LED_10_Pin,GPIO_PIN_RESET); //turn on led 10
-		  break;
-	  case 11:
-		  HAL_GPIO_WritePin(LED_10_GPIO_Port,LED_10_Pin,GPIO_PIN_SET);
-		  HAL_GPIO_WritePin(LED_11_GPIO_Port,LED_11_Pin,GPIO_PIN_RESET); //turn on led 11
-		  break;
-	  case 12:
-		  HAL_GPIO_WritePin(LED_11_GPIO_Port,LED_11_Pin,GPIO_PIN_SET);
-		  HAL_GPIO_WritePin(LED_12_GPIO_Port,LED_12_Pin,GPIO_PIN_RESET); //turn on led 12
-		  break;
-	  }
-  }
+
   //Ex7
   void clearAllClock() {
 	  HAL_GPIO_WritePin(GPIOA, ALL_LED_PINS, GPIO_PIN_SET);
@@ -166,12 +113,44 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int count = 0;
+  int hour = 15;
+  int min  = 30;
+  int sec  = 50;
+
+  // LED index ban đầu
+  int sec_led  = sec  % 12;
+  int min_led  = min  % 12;
+  int hour_led = hour % 12;
+
   while (1)
   {
-	  if(count > 13) count = 0;
-	  displayClockTime(count++);
-	  HAL_Delay(1000);
+      clearAllClock();
+
+
+      setNumberOnClock(sec_led);
+      setNumberOnClock(min_led);
+      setNumberOnClock(hour_led);
+
+      HAL_Delay(1000);
+
+      sec++;
+      if(sec >= 60){
+          sec = 0;
+
+          min++;
+          if(min >= 60){
+              min = 0;
+              hour++;
+
+              if(hour >= 24)
+                  hour = 0;
+          }
+      }
+
+      // Cập nhật vị trí LED:
+      sec_led  = sec  % 12;   // mỗi 1 giây sáng LED kế tiếp
+      min_led  = min  % 12;   // mỗi 1 phút sáng LED kế tiếp
+      hour_led = hour % 12;   // mỗi 5 phút đổi vị trí 1 lần (tự nhiên do modulo 12)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
