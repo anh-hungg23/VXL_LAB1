@@ -320,7 +320,6 @@ int main(void)
   int state_sub  = GREEN;
   int cnt_main = RED_TIME;
   int cnt_sub  = GREEN_TIME;
-  int led_flag = 0.75;
   while (1)
   {
 	  // ======== Logic đèn giao thông mỗi 1s ========
@@ -330,21 +329,21 @@ int main(void)
 			HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin, RESET);
 			HAL_GPIO_WritePin(LED2_GPIO_Port,LED2_Pin, SET);
 			HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin, SET);
-			if(--cnt_main < 1){ cnt_main = GREEN_TIME; state_main = GREEN; }
+			if(cnt_main < 0){ cnt_main = GREEN_TIME; state_main = GREEN; }
 			break;
 
 		case YEL:
 			HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin, SET);
 			HAL_GPIO_WritePin(LED2_GPIO_Port,LED2_Pin, RESET);
 			HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin, SET);
-			if(--cnt_main < 1){ cnt_main = RED_TIME; state_main = RED; }
+			if(cnt_main < 0){ cnt_main = RED_TIME; state_main = RED; }
 			break;
 
 		case GREEN:
 			HAL_GPIO_WritePin(LED1_GPIO_Port,LED1_Pin, SET);
 			HAL_GPIO_WritePin(LED2_GPIO_Port,LED2_Pin, SET);
 			HAL_GPIO_WritePin(LED3_GPIO_Port,LED3_Pin, RESET);
-			if(--cnt_main < 1){ cnt_main = YEL_TIME; state_main = YEL; }
+			if(cnt_main < 0){ cnt_main = YEL_TIME; state_main = YEL; }
 			break;
 		}
 
@@ -354,21 +353,21 @@ int main(void)
 			HAL_GPIO_WritePin(LED4_GPIO_Port,LED4_Pin, RESET);
 			HAL_GPIO_WritePin(LED5_GPIO_Port,LED5_Pin, SET);
 			HAL_GPIO_WritePin(LED6_GPIO_Port,LED6_Pin, SET);
-			if(--cnt_sub < 1){ cnt_sub = GREEN_TIME; state_sub = GREEN; }
+			if(cnt_sub < 1){ cnt_sub = GREEN_TIME; state_sub = GREEN; }
 			break;
 
 		case YEL:
 			HAL_GPIO_WritePin(LED4_GPIO_Port,LED4_Pin, SET);
 			HAL_GPIO_WritePin(LED5_GPIO_Port,LED5_Pin, RESET);
 			HAL_GPIO_WritePin(LED6_GPIO_Port,LED6_Pin, SET);
-			if(--cnt_sub < 1){ cnt_sub = RED_TIME; state_sub = RED; }
+			if(cnt_sub < 1){ cnt_sub = RED_TIME; state_sub = RED; }
 			break;
 
 		case GREEN:
 			HAL_GPIO_WritePin(LED4_GPIO_Port,LED4_Pin, SET);
 			HAL_GPIO_WritePin(LED5_GPIO_Port,LED5_Pin, SET);
 			HAL_GPIO_WritePin(LED6_GPIO_Port,LED6_Pin, RESET);
-			if(--cnt_sub < 1){ cnt_sub = YEL_TIME; state_sub = YEL; }
+			if(cnt_sub < 1){ cnt_sub = YEL_TIME; state_sub = YEL; }
 			break;
 		}
 
@@ -382,6 +381,8 @@ int main(void)
 
 		HAL_GPIO_TogglePin(LED_TEST_GPIO_Port,LED_TEST_Pin);
 		HAL_Delay(1000);
+		cnt_main--;
+		cnt_sub--;
 
     /* USER CODE END WHILE */
 
